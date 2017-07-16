@@ -1,33 +1,32 @@
-/**
- * Main application file
- */
-
-'use strict';
-
-// Set default node environment to development
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
+﻿require('rootpath')();
 var express = require('express');
-var mongoose = require('mongoose');
-var config = require('./config/environment');
-
-// Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options);
-
-// Populate DB with sample data
-if(config.seedDB) { require('./config/seed'); }
-
-// Setup server
 var app = express();
-var server = require('http').createServer(app);
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var expressJwt = require('express-jwt');
+var config = require('config.json');
 
-require('./config/express')(app);
-require('./routes')(app);
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(session({ secret: config.secret, resave: false, saveUninitialized: true }));
 
-// Start server
-server.listen(config.port, config.ip, function () {
-  console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+// use JWT auth to secure the api
+app.use('/api', expressJwt({ secret: config.secret }).unless({ path: ['/api/users/authenticate', '/api/users/register'] }));
+
+// routes
+app.use('/login', require('./api/user/login.controller'));
+app.use('/register', require('./api/user/register.controller'));
+app.use('/app', require('./api/user/app.controller'));
+app.use('/api/users', require('./api/user/api/users.controller'));
+
+// make '/app' default route
+app.get('/', function (req, res) {
+    return res.redirect('/app');
 });
 
-// Expose app
-exports = module.exports = app;
+// start server
+var server = app.listen(3000, function () {
+    console.log('Server listening at http://' + server.address().address + ':' + server.address().port);
+});
