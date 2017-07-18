@@ -15,8 +15,8 @@ module.exports = function(app)
   // as the rout prefix [RoutePrefix("api/Account")]
 
 
-  app.use('/api/example', require('./api/example'));
- // app.use('/api/user', require('./api/user'));
+ // app.use('/api/example', require('./api/example'));
+  app.use('/api/user', require('./api/user'));
 
  
  // All undefined asset or api routes should return a 404
