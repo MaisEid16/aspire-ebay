@@ -1,9 +1,7 @@
-'use strict';
+const path = require('path');
+const _ = require('lodash');
 
-var path = require('path');
-var _ = require('lodash');
-
-function requiredProcessEnv(name) {
+requiredProcessEnv = (name) =>{
   if(!process.env[name]) {
     throw new Error('You must set the ' + name + ' environment variable');
   }
