@@ -1,6 +1,6 @@
 const entity = require('../../dataAccess/entities/user.entity');
 
-class User {
+class Signup {
     constructor() {
         this.email = undefined;
         this.firstName = undefined;
@@ -8,7 +8,7 @@ class User {
     }
 
     toEntity = () => {
-        return User.toEntity(this);
+        return Signup.toEntity(this);
     };
 
     static toEntity = (user) => {
@@ -16,18 +16,10 @@ class User {
         e.email = user.email;
         e.firstName = user.firstName;
         e.lastName = user.lastName;
-        e.salt = null;
-        e.hash = null;
+        e.salt = undefined;
+        e.hash = undefined;
         return e;
     };
-
-    static toModel = (e) => {
-        let user = new User();
-        user.email = e.email;
-        user.firstName = e.firstName;
-        user.lastName = e.lastName;
-        return user;
-    }
 }
 
-module.exports = User;
+module.exports = Signup;

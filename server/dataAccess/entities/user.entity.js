@@ -7,7 +7,10 @@ const userSchema = new Schema({
     firstName: string,
     lastName: string,
     salt: string,
-    hash: string
+    hash: string,
+    joiningDate: date,
+    phoneNumber: string,
+    dateOfBirth: date,
 });
 
 module.exports = mongoose.model('User', userSchema);
